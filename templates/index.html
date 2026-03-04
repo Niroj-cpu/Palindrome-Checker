@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Palindrome Chatbot</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Palindrome Checker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <div class="container">
-    <h1>Palindrome Checker Chatbot 🤖</h1>
-    
-    <div class="chatbox" id="chatbox">
-        <div class="bot-message">Hello! Type a word and I’ll tell you if it’s a palindrome.</div>
-    </div>
+    <h1>Palindrome Checker 🤖</h1>
 
-    <input type="text" id="user-input" placeholder="Type a word..." />
-    <button onclick="checkPalindrome()">Send</button>
+    <form method="POST">
+        <input type="text" name="word" placeholder="Enter a word..." required>
+        <button type="submit">Check</button>
+    </form>
+
+    {% if result is not none %}
+        {% if result %}
+            <p class="success">{{ word }} is a palindrome ✅</p>
+        {% else %}
+            <p class="error">{{ word }} is not a palindrome ❌</p>
+        {% endif %}
+    {% endif %}
 </div>
-
-<script src="script.js"></script>
 </body>
 </html>
