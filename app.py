@@ -1,33 +1,40 @@
-print("please enter a word")
-s = input()
+from flask import Flask, render_template, request
+import os
 
-tempString=""
-for i in range (len(s)):
-    if s[i]>='A' and s[i]<='Z':
-        tempString+=chr(ord(s[i])+32)
-    else:
-        tempString+=chr(ord(s[i]))
+app = Flask(__name__)
 
-isPal=True
-for i in range(len(tempString)):
-    l=len(tempString)-1
-    if tempString[i]!=tempString[l-i]:
-        isPal=False
+# Your palindrome checker logic
+def is_palindrome(s):
+    tempString = ""
 
-formattedWord=""
-for i in range(len(s)):
-    if i==0:
-        if s[i]>='a' and s[i]<='z':
-            formattedWord+=chr(ord(s[i])-32)
+    for i in range(len(s)):
+        if s[i] >= 'A' and s[i] <= 'Z':
+            tempString += chr(ord(s[i]) + 32)
         else:
-            formattedWord+=s[i]
-    else:
-        if s[i]>='A' and s[i]<='Z':
-            formattedWord+=chr(ord(s[i])+32)
-        else:
-            formattedWord+=s[i]
+            tempString += chr(ord(s[i]))
 
-if isPal:
-    print(formattedWord + " is a palindrome")
-else:
-    print(formattedWord + " is a not a palindrome")
+    isPal = True
+    for i in range(len(tempString)):
+        l = len(tempString) - 1
+        if tempString[i] != tempString[l - i]:
+            isPal = False
+
+    return isPal
+
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+
+    result = None
+    word = ""
+
+    if request.method == "POST":
+        word = request.form["word"]
+        result = is_palindrome(word)
+
+    return render_template("index.html", result=result, word=word)
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Render provides PORT
+    app.run(host="0.0.0.0", port=port)
